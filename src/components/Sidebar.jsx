@@ -32,7 +32,7 @@ const navItems = [
   {
     id: 4,
     path: "/voice-recognition",
-    label: "Voice Control",
+    label: "Voice Recognition",
     icon: <RiMicLine size={24} />,
   },
   {
