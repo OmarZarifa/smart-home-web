@@ -1,12 +1,80 @@
-# React + Vite
+# Smart Home Web Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend of a web application for managing smart home devices in rooms. Built with React, Vite, and Tailwind CSS.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🏠 Dashboard overview of your smart home
+- 📱 Device management and control
+- 🏗️ Room-based organization
+- 🎤 Voice recognition control
+- 👤 User profile management
+- 🔐 Authentication system
+- 📱 Responsive design
+- 🌓 Modern, clean UI
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Frontend Framework:** React 18
+- **Build Tool:** Vite
+- **Styling:** Tailwind CSS
+- **Routing:** React Router v6
+- **Icons:** React Icons
+- **State Management:** React Hooks
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/smart-home-web.git
+cd smart-home-web
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+4. Open your browser and visit:
+
+```
+http://localhost:5173
+```
+
+## Project Structure
+
+```
+smart-home-web/
+├── src/
+│   ├── components/     # Reusable UI components
+│   ├── pages/         # Page components
+│   ├── App.jsx        # Main application component
+│   └── main.jsx       # Application entry point
+├── public/            # Static assets
+├── index.html         # HTML template
+├── tailwind.config.js # Tailwind CSS configuration
+├── vite.config.js     # Vite configuration
+└── package.json       # Project dependencies
+```
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
