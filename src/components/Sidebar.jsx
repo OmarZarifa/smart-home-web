@@ -50,16 +50,16 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
     <aside
       className={`${
         isSidebarOpen ? "w-64" : "w-20"
-      } bg-gray-800 transition-all duration-300 fixed h-full z-10`}
+      } bg-white shadow-md transition-all duration-300 fixed h-full z-10`}
     >
       <div className="flex flex-col h-full">
         <div className="p-6 flex items-center justify-between">
           {isSidebarOpen && (
-            <h2 className="text-xl font-bold text-white">SmartHome</h2>
+            <h2 className="text-xl font-bold text-gray-800">SmartHome</h2>
           )}
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-white"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-800"
             aria-label={isSidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
           >
             <RiMenuLine size={24} />
@@ -75,8 +75,8 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
                   className={`w-full flex items-center gap-4 px-4 py-3 rounded-lg transition-colors
                     ${
                       location.pathname === item.path
-                        ? "bg-blue-600 text-white"
-                        : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                        ? "bg-blue-50 text-blue-600"
+                        : "text-gray-600 hover:bg-gray-50"
                     }`}
                   title={!isSidebarOpen ? item.label : undefined}
                 >
@@ -88,9 +88,9 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-gray-700">
+        <div className="p-4 border-t border-gray-200">
           <button
-            className="w-full flex items-center gap-4 px-4 py-3 rounded-lg transition-colors text-red-400 hover:bg-gray-700 hover:text-red-300"
+            className="w-full flex items-center gap-4 px-4 py-3 rounded-lg transition-colors text-red-600 hover:bg-red-50"
             title={!isSidebarOpen ? "Logout" : undefined}
           >
             <RiLogoutBoxLine size={24} />
