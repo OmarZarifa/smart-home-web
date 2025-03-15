@@ -2,8 +2,8 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   RiDashboardLine,
-  RiDeviceLine,
-  RiHomeSmileLine,
+  RiFileListLine,
+  RiQuestionLine,
   RiMicLine,
   RiUserLine,
   RiMenuLine,
@@ -19,27 +19,27 @@ const navItems = [
   },
   {
     id: 2,
-    path: "/devices",
-    label: "Devices",
-    icon: <RiDeviceLine size={24} />,
-  },
-  {
-    id: 3,
-    path: "/rooms",
-    label: "Rooms",
-    icon: <RiHomeSmileLine size={24} />,
-  },
-  {
-    id: 4,
     path: "/voice-recognition",
-    label: "Voice Recognition",
+    label: "Voice Control",
     icon: <RiMicLine size={24} />,
   },
   {
-    id: 5,
+    id: 3,
+    path: "/logs",
+    label: "Logs",
+    icon: <RiFileListLine size={24} />,
+  },
+  {
+    id: 4,
     path: "/profile",
     label: "Profile",
     icon: <RiUserLine size={24} />,
+  },
+  {
+    id: 5,
+    path: "/help",
+    label: "Help Center",
+    icon: <RiQuestionLine size={24} />,
   },
 ];
 
