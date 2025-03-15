@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function Rooms() {
-  return <div>Rooms page</div>;
+  return <div>Logs page</div>;
 }

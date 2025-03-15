@@ -8,12 +8,12 @@ import {
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Dashboard from "./pages/Dashboard";
-import Devices from "./pages/Devices";
-import Rooms from "./pages/Rooms";
 import VoiceRecognition from "./pages/VoiceRecognition";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Help from "./pages/Help";
+import Logs from "./pages/Logs";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
@@ -59,13 +59,13 @@ function App() {
                       element={<Navigate to="/dashboard" replace />}
                     />
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/devices" element={<Devices />} />
-                    <Route path="/rooms" element={<Rooms />} />
                     <Route
                       path="/voice-recognition"
                       element={<VoiceRecognition />}
                     />
+                    <Route path="/logs" element={<Logs />} />
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/help" element={<Help />} />
                   </Routes>
                 </div>
               </main>
