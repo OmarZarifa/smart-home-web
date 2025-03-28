@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; 
-const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:5000'; 
-
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:5000';
 
 // Establish the WebSocket connection
-const socket = io(WS_URL);  // Use WS_URL environment variable for WebSocket URL
+const socket = io(WS_URL);
 
 function DeviceList() {
   const [devices, setDevices] = useState([]);
@@ -17,10 +16,8 @@ function DeviceList() {
 
     // Listen for real-time updates from the server
     socket.on('device:update', (updatedDevice) => {
-      // Log the received data to check if it's correct
       console.log('Received device:update:', updatedDevice);
 
-      // Update the devices state with the updated device data
       setDevices((prevDevices) =>
         prevDevices.map((device) =>
           device.id === updatedDevice.id ? updatedDevice : device
@@ -28,32 +25,31 @@ function DeviceList() {
       );
     });
 
-    // Cleanup the event listener when the component is unmounted
+    // Cleanup event listener when component unmounts
     return () => {
       socket.off('device:update');
     };
   }, []);
 
-  // Fetch devices from the server
+  // Fetch devices from the backend
   const fetchDevices = async () => {
     try {
       const response = await fetch(`${API_URL}/device/all`);
       const data = await response.json();
       if (data.data) {
-        setDevices(data.data.devices); 
+        setDevices(data.data.devices);
       }
     } catch (err) {
       console.error("Failed to fetch devices:", err);
     }
   };
 
-  // Toggle device status (sending a patch request to the backend)
+  // Toggle device status
   const toggleDeviceStatus = async (device) => {
     const updatedStatus = !device.status;
-    const updatedLightStatus = updatedStatus ? 'on' : 'off';  // Change the value to 'on' or 'off'
+    const updatedLightStatus = updatedStatus ? 'ON' : 'OFF';
 
     try {
-      // Send the PATCH request to update the device
       const response = await fetch(`${API_URL}/device/${device.id}`, {
         method: 'PATCH',
         headers: {
@@ -61,7 +57,7 @@ function DeviceList() {
         },
         body: JSON.stringify({
           status: updatedStatus,
-          value: updatedStatus ? 1.0 : 0.0, // Update the value based on status
+          value: updatedStatus ? 1.0 : 0.0,
         }),
       });
 
@@ -69,12 +65,12 @@ function DeviceList() {
       if (updatedDevice.error) {
         console.error('Failed to update device:', updatedDevice.error);
       } else {
-        // Log the emitted event to check the JSON being sent
-        const deviceKey = device.name.toLowerCase();  // Use device name as key
-        console.log(`Emitting device:update: { ${deviceKey}: '${updatedLightStatus}' }`);
+        // Emit WebSocket event
+        const deviceKey = device.name;
+        const emitPayload = { device_name: deviceKey, status: updatedLightStatus };
 
-        // Emit the socket event with the correct payload once the device status is updated
-        socket.emit('device:update', { [deviceKey]: updatedLightStatus });
+        console.log("Emitting device:update:", emitPayload);
+        socket.emit('device:update', emitPayload);
       }
     } catch (err) {
       console.error('Failed to update device status:', err);
