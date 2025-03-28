@@ -15,7 +15,6 @@ import Login from "./pages/Login";
 import Help from "./pages/Help";
 import Logs from "./pages/Logs";
 
-// 👇 You don't need to import AddDeviceForm & DeviceList here since it's now inside Dashboard.jsx
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
