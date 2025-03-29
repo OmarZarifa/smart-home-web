@@ -15,6 +15,7 @@ import Login from "./pages/Login";
 import Help from "./pages/Help";
 import Logs from "./pages/Logs";
 
+
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
 
@@ -30,12 +31,16 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        {/* Main Layout */}
         <Route
           path="/*"
           element={
             <div className="min-h-screen bg-gray-100 flex">
+              {/* Sidebar */}
               <aside
                 className={`${
                   isSidebarOpen ? "w-64" : "w-20"
@@ -46,6 +51,8 @@ function App() {
                   setIsSidebarOpen={setIsSidebarOpen}
                 />
               </aside>
+
+              {/* Main Content */}
               <main
                 className={`flex-1 transition-all duration-300 ${
                   isSidebarOpen ? "ml-64" : "ml-20"
