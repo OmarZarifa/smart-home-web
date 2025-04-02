@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5050';
+const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:5050';
 
 // Establish the WebSocket connection
 const socket = io(WS_URL);
