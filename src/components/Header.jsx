@@ -96,8 +96,8 @@ function Header({ activePage }) {
   };
 
   return (
-    <header className="bg-gradient-to-r from-white to-blue-50">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <header style={{ backgroundColor: '#dddfd6', fontFamily: 'Tenor Sans'}}>
+      <div className="max-w-7xl mx-auto px-6 py-8" style={{ backgroundColor: '#dddfd6'}}>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
           <div>
             <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">

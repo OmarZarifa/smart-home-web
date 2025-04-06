@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import { FaSearch, FaPlus, FaTrashAlt } from 'react-icons/fa';
+import { LuSettings2 } from 'react-icons/lu';
+import { IconContext } from 'react-icons';
+import AddDeviceDialog from './AddDeviceDialog';
+import DeleteDeviceDialog from './DeleteDeviceDialog';
+import './styles.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:5000';
@@ -9,15 +15,16 @@ const socket = io(WS_URL);
 
 function DeviceList() {
   const [devices, setDevices] = useState([]);
+  const [showDialog, setShowDialog] = useState(false);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedDeviceId, setSelectedDeviceId] = useState(false);
 
-  // Fetch devices initially
   useEffect(() => {
     fetchDevices();
 
     // Listen for real-time updates from the server
     socket.on('device:update', (updatedDevice) => {
       console.log('Received device:update:', updatedDevice);
-
       setDevices((prevDevices) =>
         prevDevices.map((device) =>
           device.id === updatedDevice.id ? updatedDevice : device
@@ -25,13 +32,11 @@ function DeviceList() {
       );
     });
 
-    // Cleanup event listener when component unmounts
     return () => {
       socket.off('device:update');
     };
   }, []);
 
-  // Fetch devices from the backend
   const fetchDevices = async () => {
     try {
       const response = await fetch(`${API_URL}/device/all`);
@@ -40,11 +45,10 @@ function DeviceList() {
         setDevices(data.data.devices);
       }
     } catch (err) {
-      console.error("Failed to fetch devices:", err);
+      console.error('Failed to fetch devices:', err);
     }
   };
 
-  // Toggle device status
   const toggleDeviceStatus = async (device) => {
     const updatedStatus = !device.status;
     const updatedLightStatus = updatedStatus ? 'ON' : 'OFF';
@@ -65,11 +69,10 @@ function DeviceList() {
       if (updatedDevice.error) {
         console.error('Failed to update device:', updatedDevice.error);
       } else {
-        // Emit WebSocket event
         const deviceKey = device.name;
         const emitPayload = { device_name: deviceKey, status: updatedLightStatus };
 
-        console.log("Emitting device:update:", emitPayload);
+        console.log('Emitting device:update:', emitPayload);
         socket.emit('device:update', emitPayload);
       }
     } catch (err) {
@@ -77,27 +80,116 @@ function DeviceList() {
     }
   };
 
+  const openDeleteDialog = (deviceId) => {
+    setSelectedDeviceId(deviceId);
+    setDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+    setSelectedDeviceId(null);
+  };
+
+  const handleDeviceDeleted = (deviceId) => {
+    setDevices(devices.filter((device) => device.id !== deviceId));
+  };
+
   return (
     <div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <h1 style={{ fontFamily: 'Tenor Sans', fontSize: '1.5rem', color: 'white' }}>
+            My Devices
+          </h1>
+          <div style={{ position: 'relative', width: '300px' }}>
+            <FaSearch className="search-button" />
+            <input type="text" placeholder="Search devices..." className="search-input" />
+          </div>
+        </div>
+
+        <button className="add-device-button" onClick={() => setShowDialog(true)}>
+          <FaPlus /> Add Device
+        </button>
+
+        <AddDeviceDialog
+          isOpen={showDialog}
+          onClose={() => setShowDialog(false)}
+          onDeviceAdded={(device) => {
+            setShowDialog(false);
+            fetchDevices();
+          }}
+        />
+      </div>
+
+      <div style={{ height: '1.5rem' }}></div>
+
       {devices.length === 0 ? (
         <p>No devices found.</p>
       ) : (
-        <ul>
+        <div className="device-grid">
           {devices.map((device) => (
-            <li key={device.id} className="mb-4 p-3 border rounded shadow flex justify-between items-center">
-              <div>
-                <h3 className="font-semibold">{device.name} ({device.type})</h3>
+            <div key={device.id} className="device-item">
+              <div className="device-header">
+                <h3 className="device-name">
+                  {device.name} ({device.type})
+                </h3>
+                <div className="device-buttons">
+                  <IconContext.Provider value={{ size: '25px' }}>
+                    <LuSettings2 className="device-button" />
+                    <button
+                      className="device-button"
+                      onClick={() => openDeleteDialog(device.id)}
+                    >
+                      <FaTrashAlt />
+                    </button>
+                  </IconContext.Provider>
+                </div>
+              </div>
+
+              <br />
+
+              <div className="device-info">
+                <p>
+                  Created:{' '}
+                  {new Date(device.created_at)
+                    .toISOString()
+                    .slice(0, 16)
+                    .replace('T', ' ')}
+                </p>
+              </div>
+
+              <div className="device-info">
+                <p>
+                  Last Updated:{' '}
+                  {new Date(device.modified_at)
+                    .toISOString()
+                    .slice(0, 16)
+                    .replace('T', ' ')}
+                </p>
+              </div>
+
+              <div className="device-info">
                 <p>Status: {device.status ? 'ON' : 'OFF'}</p>
               </div>
-              <button
-                onClick={() => toggleDeviceStatus(device)}
-                className={`px-4 py-2 rounded ${device.status ? 'bg-red-500' : 'bg-green-500'} text-white`}
-              >
-                {device.status ? 'Turn OFF' : 'Turn ON'}
-              </button>
-            </li>
+
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={device.status}
+                  onChange={() => toggleDeviceStatus(device)}
+                />
+                <span className="slider round"></span>
+              </label>
+            </div>
           ))}
-        </ul>
+
+          <DeleteDeviceDialog
+            isOpen={isDeleteDialogOpen}
+            onClose={closeDeleteDialog}
+            deviceId={selectedDeviceId}
+            onDeviceDeleted={handleDeviceDeleted}
+          />
+        </div>
       )}
     </div>
   );

@@ -1,0 +1,363 @@
+.dashboard {
+    font-family: Arial, sans-serif;
+    background-color: #76766b;
+    padding: 20px;
+    max-width: 1200px;
+    width: 80%;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-title {
+    text-align: left;
+    color: #000000;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-family: 'Tenor Sans'
+}
+
+.device-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.device-item {
+    background-color: #1c2120;
+    border: 1px solid #76766b;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    align-items: flex-start;
+    min-height: 180px;
+}
+
+.device-item:hover {
+    transform: translateY(-5px);
+}
+
+.device-info h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #dcdcd4;
+}
+
+.device-info p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+}
+
+input:checked+.slider {
+    background-color: #4CAF50;
+}
+
+input:checked+.slider:before {
+    transform: translateX(26px);
+}
+
+.switch:hover .slider {
+    background-color: #aaa;
+}
+
+@media (max-width: 768px) {
+    .device-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .device-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.device-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.device-name {
+    margin: 0;
+    font-size: 1.2rem;
+    flex-grow: 1;
+    text-align: left;
+    color: #dcdcd4;
+}
+
+.device-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.device-button {
+    cursor: pointer;
+    color: #555;
+    transition: color 0.2s;
+}
+
+.device-button:hover {
+    color: #dcdcd4;
+}
+
+.ai-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 0.5rem;
+}
+
+/* Help Center Styles */
+
+.container-help-center {
+    padding: 2rem;
+    font-family: 'Tenor Sans', sans-serif;
+    background-color: #76766b;
+}
+
+.faq-container {
+    margin-top: 1rem;
+}
+
+.faq-item {
+    background-color: #fff;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.question {
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #1c2120;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.question:hover {
+    background-color: #6b846d;
+}
+
+.answer {
+    padding: 1rem;
+    font-size: 1rem;
+    color: #333;
+    background-color: #f1f1f1;
+}
+
+.search-button {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: white;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.6rem 0.6rem 0.6rem 2.5rem;
+    font-size: 1rem;
+    border-radius: 9999px;
+    border: none;
+    outline: none;
+    background-color: #58544c;
+    color: white;
+}
+
+.security-log {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: black;
+    color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.add-device-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 28rem;
+    padding: 1.5rem;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.input-field {
+    margin-top: 0.25rem;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    outline: none;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.input-field:focus {
+    box-shadow: 0 0 0 2px #3b82f6;
+    border-color: #3b82f6;
+}
+
+.cancel-button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 0.375rem;
+    background-color: #D1D5DB;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-button:hover {
+    background-color: #9CA3AF;
+}
+
+.confirm-add-device-button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 0.375rem;
+    background-color: #111827;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-add-device-button:hover {
+    background-color: #3B82F6;
+}
+
+
+.action-bar-dialog {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.confirm-delete-device-button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 0.375rem;
+    background-color: #DC2626;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-delete-device-button:hover {
+    background-color: #EF4444;
+}
+
+.sidebar {
+    min-height: 100vh;
+    background-color: #76766b;
+    display: flex;
+}
+
+.header {
+    padding: 1.5rem;
+    background-color: #76766b;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #76766b;
+}
