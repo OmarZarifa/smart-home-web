@@ -39,7 +39,7 @@ function App() {
         <Route
           path="/*"
           element={
-            <div className="min-h-screen bg-gray-100 flex">
+            <div className="sidebar">
               {/* Sidebar */}
               <aside
                 className={`${
@@ -59,7 +59,7 @@ function App() {
                 }`}
               >
                 <Header />
-                <div className="p-6">
+                <div className="header">
                   <Routes>
                     <Route
                       path="/"
