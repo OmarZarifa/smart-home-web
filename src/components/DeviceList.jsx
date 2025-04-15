@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
 import { FaSearch, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { LuSettings2 } from 'react-icons/lu';
 import { IconContext } from 'react-icons';
+import { socket } from '../socket';
 import AddDeviceDialog from './AddDeviceDialog';
 import DeleteDeviceDialog from './DeleteDeviceDialog';
+import axiosInstance from '../utils/axiosInstance';
 import './styles.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:5000';
-
-// Establish the WebSocket connection
-const socket = io(WS_URL);
 
 function DeviceList() {
   const [devices, setDevices] = useState([]);
@@ -39,10 +35,9 @@ function DeviceList() {
 
   const fetchDevices = async () => {
     try {
-      const response = await fetch(`${API_URL}/device/all`);
-      const data = await response.json();
-      if (data.data) {
-        setDevices(data.data.devices);
+      const response = await axiosInstance.get('/device/all');
+      if (response.data.data) {
+        setDevices(response.data.data.devices);
       }
     } catch (err) {
       console.error('Failed to fetch devices:', err);
@@ -54,26 +49,17 @@ function DeviceList() {
     const updatedLightStatus = updatedStatus ? 'ON' : 'OFF';
 
     try {
-      const response = await fetch(`${API_URL}/device/${device.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          status: updatedStatus,
-          value: updatedStatus ? 1.0 : 0.0,
-        }),
+      const response = await axiosInstance.patch(`/device/${device.id}`, {
+        status: updatedStatus,
+        value: updatedStatus ? 1.0 : 0.0,
       });
-
-      const updatedDevice = await response.json();
-      if (updatedDevice.error) {
-        console.error('Failed to update device:', updatedDevice.error);
-      } else {
-        const deviceKey = device.name;
-        const emitPayload = { device_name: deviceKey, status: updatedLightStatus };
-
-        console.log('Emitting device:update:', emitPayload);
-        socket.emit('device:update', emitPayload);
+      
+      if (response.data.data) {
+        setDevices(prevDevices =>
+          prevDevices.map(d =>
+            d.id === device.id ? { ...d, status: updatedStatus } : d
+          )
+        );
       }
     } catch (err) {
       console.error('Failed to update device status:', err);
@@ -114,7 +100,7 @@ function DeviceList() {
         <AddDeviceDialog
           isOpen={showDialog}
           onClose={() => setShowDialog(false)}
-          onDeviceAdded={(device) => {
+          onDeviceAdded={() => {
             setShowDialog(false);
             fetchDevices();
           }}

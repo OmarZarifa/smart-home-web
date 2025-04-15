@@ -9,9 +9,8 @@ import {
   RiMenuLine,
   RiLogoutBoxLine,
 } from "react-icons/ri";
-
+import { logout } from "../utils/auth";
 import logo from '../assets/logo.png';
-
 
 const navItems = [
   {
@@ -48,6 +47,11 @@ const navItems = [
 
 function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
   const location = useLocation();
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    await logout();
+  };
 
   return (
     <aside
@@ -96,7 +100,8 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
 
         <div className="p-4 border-t border-gray-200">
           <button
-            className="w-full flex items-center gap-4 px-4 py-3 rounded-lg transition-colors hover:bg-red-50"
+            onClick={handleLogout}
+            className="w-full flex items-center gap-4 px-4 py-3 rounded-lg transition-colors hover:bg-red-50 text-red-600"
             title={!isSidebarOpen ? "Logout" : undefined}
           >
             <RiLogoutBoxLine size={24} />
