@@ -14,7 +14,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Help from "./pages/Help";
 import Logs from "./pages/Logs";
-
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
@@ -35,48 +35,50 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Main Layout */}
+        {/* Main Layout with Protected Routes */}
         <Route
           path="/*"
           element={
-            <div className="sidebar">
-              {/* Sidebar */}
-              <aside
-                className={`${
-                  isSidebarOpen ? "w-64" : "w-20"
-                } bg-white shadow-md transition-all duration-300 fixed h-full z-10`}
-              >
-                <Sidebar
-                  isSidebarOpen={isSidebarOpen}
-                  setIsSidebarOpen={setIsSidebarOpen}
-                />
-              </aside>
+            <ProtectedRoute>
+              <div className="sidebar">
+                {/* Sidebar */}
+                <aside
+                  className={`${
+                    isSidebarOpen ? "w-64" : "w-20"
+                  } bg-white shadow-md transition-all duration-300 fixed h-full z-10`}
+                >
+                  <Sidebar
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                </aside>
 
-              {/* Main Content */}
-              <main
-                className={`flex-1 transition-all duration-300 ${
-                  isSidebarOpen ? "ml-64" : "ml-20"
-                }`}
-              >
-                <Header />
-                <div className="header">
-                  <Routes>
-                    <Route
-                      path="/"
-                      element={<Navigate to="/dashboard" replace />}
-                    />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route
-                      path="/voice-recognition"
-                      element={<VoiceRecognition />}
-                    />
-                    <Route path="/logs" element={<Logs />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/help" element={<Help />} />
-                  </Routes>
-                </div>
-              </main>
-            </div>
+                {/* Main Content */}
+                <main
+                  className={`flex-1 transition-all duration-300 ${
+                    isSidebarOpen ? "ml-64" : "ml-20"
+                  }`}
+                >
+                  <Header />
+                  <div className="header">
+                    <Routes>
+                      <Route
+                        path="/"
+                        element={<Navigate to="/dashboard" replace />}
+                      />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route
+                        path="/voice-recognition"
+                        element={<VoiceRecognition />}
+                      />
+                      <Route path="/logs" element={<Logs />} />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/help" element={<Help />} />
+                    </Routes>
+                  </div>
+                </main>
+              </div>
+            </ProtectedRoute>
           }
         />
       </Routes>

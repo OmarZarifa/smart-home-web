@@ -27,7 +27,7 @@ function Header({ activePage }) {
   }, []);
 
   useEffect(() => {
-    // Function to get user's location
+    // get user's location
     const getUserLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -37,25 +37,27 @@ function Header({ activePage }) {
           },
           (error) => {
             console.error("Error getting location:", error);
-            // Fallback to default location (e.g., Kristianstad)
+            // default location
             fetchWeatherData(56.0294, 14.1567);
           }
         );
       } else {
         setError("Geolocation is not supported by your browser");
-        // Fallback to default location
+        // default location
         fetchWeatherData(56.0294, 14.1567);
       }
     };
 
-    // Function to fetch weather data
+    // fetch weather data
     const fetchWeatherData = async (lat, lon) => {
       try {
-        const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
+        const API_KEY = "ebb6301e717d4626977d36747f426f4f"
         const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`,
+          {
+            withCredentials: false
+          }
         );
-
         const { main, weather: weatherData, name } = response.data;
         setWeather({
           temp: `${Math.round(main.temp)}°C`,
@@ -68,7 +70,7 @@ function Header({ activePage }) {
       }
     };
 
-    // Get user location and fetch weather data
+    
     getUserLocation();
 
     // Refresh weather data every 30 minutes
@@ -79,7 +81,7 @@ function Header({ activePage }) {
     return () => clearInterval(weatherInterval);
   }, []);
 
-  // Function to get weather icon based on condition
+  // get weather icon based on condition
   const getWeatherIcon = (condition) => {
     switch (condition?.toLowerCase()) {
       case "clear":
