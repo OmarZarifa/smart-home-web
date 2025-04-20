@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { FaSearch, FaPlus, FaTrashAlt } from 'react-icons/fa';
-import { LuSettings2 } from 'react-icons/lu';
-import { IconContext } from 'react-icons';
+import { FaSearch } from 'react-icons/fa';
 import { socket } from '../socket';
-import AddDeviceDialog from './AddDeviceDialog';
-import DeleteDeviceDialog from './DeleteDeviceDialog';
 import axiosInstance from '../utils/axiosInstance';
 import './styles.css';
 
-
 function DeviceList() {
   const [devices, setDevices] = useState([]);
-  const [showDialog, setShowDialog] = useState(false);
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedDeviceId, setSelectedDeviceId] = useState(false);
 
   useEffect(() => {
     fetchDevices();
@@ -46,7 +38,6 @@ function DeviceList() {
 
   const toggleDeviceStatus = async (device) => {
     const updatedStatus = !device.status;
-    const updatedLightStatus = updatedStatus ? 'ON' : 'OFF';
 
     try {
       const response = await axiosInstance.patch(`/device/${device.id}`, {
@@ -66,48 +57,21 @@ function DeviceList() {
     }
   };
 
-  const openDeleteDialog = (deviceId) => {
-    setSelectedDeviceId(deviceId);
-    setDeleteDialogOpen(true);
-  };
-
-  const closeDeleteDialog = () => {
-    setDeleteDialogOpen(false);
-    setSelectedDeviceId(null);
-  };
-
-  const handleDeviceDeleted = (deviceId) => {
-    setDevices(devices.filter((device) => device.id !== deviceId));
-  };
-
   return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <h1 style={{ fontFamily: 'Tenor Sans', fontSize: '1.5rem', color: 'white' }}>
+    <div className="device-list-container">
+      <div className="device-list-header">
+        <div className="device-list-title-container">
+          <h1 className="device-list-title">
             My Devices
           </h1>
-          <div style={{ position: 'relative', width: '300px' }}>
+          <div className="search-container">
             <FaSearch className="search-button" />
             <input type="text" placeholder="Search devices..." className="search-input" />
           </div>
         </div>
-
-        <button className="add-device-button" onClick={() => setShowDialog(true)}>
-          <FaPlus /> Add Device
-        </button>
-
-        <AddDeviceDialog
-          isOpen={showDialog}
-          onClose={() => setShowDialog(false)}
-          onDeviceAdded={() => {
-            setShowDialog(false);
-            fetchDevices();
-          }}
-        />
       </div>
 
-      <div style={{ height: '1.5rem' }}></div>
+      <div className="device-list-spacer"></div>
 
       {devices.length === 0 ? (
         <p>No devices found.</p>
@@ -119,17 +83,6 @@ function DeviceList() {
                 <h3 className="device-name">
                   {device.name} ({device.type})
                 </h3>
-                <div className="device-buttons">
-                  <IconContext.Provider value={{ size: '25px' }}>
-                    <LuSettings2 className="device-button" />
-                    <button
-                      className="device-button"
-                      onClick={() => openDeleteDialog(device.id)}
-                    >
-                      <FaTrashAlt />
-                    </button>
-                  </IconContext.Provider>
-                </div>
               </div>
 
               <br />
@@ -168,13 +121,6 @@ function DeviceList() {
               </label>
             </div>
           ))}
-
-          <DeleteDeviceDialog
-            isOpen={isDeleteDialogOpen}
-            onClose={closeDeleteDialog}
-            deviceId={selectedDeviceId}
-            onDeviceDeleted={handleDeviceDeleted}
-          />
         </div>
       )}
     </div>

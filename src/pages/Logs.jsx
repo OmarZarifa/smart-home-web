@@ -11,59 +11,53 @@ const logsData = [
 ];
 
 export default function Rooms() {
-
-    return <div style={{ padding: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <h2 style={{ fontFamily: 'Tenor Sans', fontSize: '1.5rem', color: 'white' }}>
-                Security Logs
-            </h2>
-            <div style={{ position: 'relative', width: '300px' }}>
-                <FaSearch
-                    className="search-button"
-                />
-                <input
-                    type="text"
-                    placeholder="Search logs..."
-                    className="search-input"
-                />
+    return (
+        <div className="min-h-screen bg-[#76766b] dark:bg-gray-900 p-8">
+            <div className="flex items-center gap-4 mb-6">
+                <h2 className="text-2xl font-bold text-white dark:text-white" style={{ fontFamily: 'Tenor Sans' }}>
+                    Security Logs
+                </h2>
+                <div className="relative">
+                    <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <input
+                        type="text"
+                        placeholder="Search logs..."
+                        className="pl-10 pr-4 py-2 rounded-lg bg-white/10 dark:bg-gray-800/30 border border-white/20 dark:border-gray-700/50 text-white dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
             </div>
-        </div>
-        <table className="security-log">
-            <thead>
-                <tr style={{ backgroundColor: '#000000', color: 'white' }}>
-                    <th style={{ padding: '1rem', textAlign: 'left', display: 'flex', alignItems: 'center' }} >
-                        <FaEnvelope style={{ marginRight: '0.5rem' }} />Email</th>
-                    <th style={{ padding: '1rem', textAlign: 'left' }}>Action</th>
-                    <th style={{ padding: '1rem', textAlign: 'left' }}>Success</th>
-                </tr>
-            </thead>
-            <tbody>
-                {logsData.map((log, index) => (
-                    <tr
-                        key={index}
-                        style={{
-                            backgroundColor: index % 2 === 0 ? '#444' : '#555',
-                        }}
-                    >
-                        <td style={{ padding: '1rem' }}>{log.email}</td>
-                        <td style={{ padding: '1rem' }}>{log.action}</td>
-                        <td style={{ padding: '1rem' }}>
-                            <span
-                                style={{
-                                    color: log.success ? 'green' : 'red',
-                                    fontWeight: 'bold',
-                                }}
-                            >
-                                {log.success ? (
-                                    <FaCheckCircle style={{ color: 'green' }} />
-                                ) : (
-                                    <FaTimesCircle style={{ color: '#f35000' }} />
-                                )}
-                            </span>
-                        </td>
+            <table className="w-full">
+                <thead>
+                    <tr className="bg-[#1c2120] dark:bg-gray-800 text-white">
+                        <th className="p-4 text-left flex items-center">
+                            <FaEnvelope className="mr-2" />
+                            Email
+                        </th>
+                        <th className="p-4 text-left">Action</th>
+                        <th className="p-4 text-left">Success</th>
                     </tr>
-                ))}
-            </tbody>
-        </table>
-    </div>;
+                </thead>
+                <tbody>
+                    {logsData.map((log, index) => (
+                        <tr
+                            key={index}
+                            className={`${
+                                index % 2 === 0 ? 'bg-[#2a2f2e] dark:bg-gray-800/50' : 'bg-[#1c2120] dark:bg-gray-800'
+                            } text-white`}
+                        >
+                            <td className="p-4">{log.email}</td>
+                            <td className="p-4">{log.action}</td>
+                            <td className="p-4">
+                                {log.success ? (
+                                    <FaCheckCircle className="text-green-500" />
+                                ) : (
+                                    <FaTimesCircle className="text-red-500" />
+                                )}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
 }

@@ -11,6 +11,7 @@ import {
 } from "react-icons/ri";
 import { logout } from "../utils/auth";
 import logo from '../assets/logo.png';
+import { useTheme } from "../context/ThemeContext";
 
 const navItems = [
   {
@@ -47,6 +48,7 @@ const navItems = [
 
 function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
   const location = useLocation();
+  const { isDarkMode } = useTheme();
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -57,19 +59,19 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
     <aside
       className={`${
         isSidebarOpen ? "w-64" : "w-20"
-      } bg-white shadow-md transition-all duration-300 fixed h-full z-10`}
+      } bg-[#dddfd6] dark:bg-gray-900 shadow-md transition-all duration-300 fixed h-full z-10`}
     >
-      <div className="flex flex-col h-full" style={{ backgroundColor: '#dddfd6'}}>
+      <div className="flex flex-col h-full">
         <div className="p-6 flex items-center justify-between">
           {isSidebarOpen && (
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <img src={logo} alt='' style={{ width: '50px', height: '50px', marginRight: '10px' }}></img>
-              <h2 className="text-xl font-bold text-gray-800" style={{ fontFamily: 'Tenor Sans', margin: 0 }}>HomeSync</h2>
+            <div className="flex items-center">
+              <img src={logo} alt='' className="w-12 h-12 mr-3" />
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white" style={{ fontFamily: 'Tenor Sans' }}>HomeSync</h2>
             </div>
           )}
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-800"
+            className="p-2 hover:bg-white/20 dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-800 dark:text-white"
             aria-label={isSidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
           >
             <RiMenuLine size={24} />
@@ -77,7 +79,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
         </div>
 
         <nav className="flex-1 px-4">
-          <ul className="space-y-2" style={{ backgroundColor: '#dddfd6' }}>
+          <ul className="space-y-2">
             {navItems.map((item) => (
               <li key={item.id}>
                 <Link
@@ -85,8 +87,8 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
                   className={`w-full flex items-center gap-4 px-4 py-3 rounded-lg transition-colors
                     ${
                       location.pathname === item.path
-                        ? "bg-zinc-900 text-gray-200"
-                        : "text-gray-600 hover:bg-gray-50"
+                        ? "bg-white/30 dark:bg-gray-800 text-gray-800 dark:text-white"
+                        : "text-gray-600 dark:text-gray-400 hover:bg-white/20 dark:hover:bg-gray-800"
                     }`}
                   title={!isSidebarOpen ? item.label : undefined}
                 >
@@ -98,10 +100,10 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-4 px-4 py-3 rounded-lg transition-colors hover:bg-red-50 text-red-600"
+            className="w-full flex items-center gap-4 px-4 py-3 rounded-lg transition-colors hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400"
             title={!isSidebarOpen ? "Logout" : undefined}
           >
             <RiLogoutBoxLine size={24} />

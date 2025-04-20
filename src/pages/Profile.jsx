@@ -90,20 +90,20 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+      <div className="flex items-center justify-center min-h-screen bg-[#76766b] dark:bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#dcdcd4] dark:border-gray-100"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-red-500 text-center">
+      <div className="flex items-center justify-center min-h-screen bg-[#76766b] dark:bg-gray-900">
+        <div className="text-[#dcdcd4] text-center">
           <p>{error}</p>
           <button
             onClick={() => navigate("/login")}
-            className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+            className="mt-4 px-4 py-2 bg-[#1c2120] text-[#dcdcd4] rounded-md hover:bg-[#2a2f2e] transition-colors"
           >
             Go to Login
           </button>
@@ -113,24 +113,24 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-[#76766b] dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <div className="flex flex-col items-center">
+          <h2 className="text-center text-3xl font-extrabold text-[#dcdcd4] dark:text-white">
             Profile Information
           </h2>
         </div>
-        <div className="bg-white shadow-md rounded-lg p-6">
+        <div className="bg-[#1c2120] dark:bg-gray-800 shadow-lg rounded-lg p-6">
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Username</label>
-              <div className="mt-1 p-2 bg-gray-50 rounded-md">
+              <label className="block text-sm font-medium text-[#dcdcd4] dark:text-gray-300">Username</label>
+              <div className="mt-1 p-2 bg-[#2a2f2e] dark:bg-gray-700 rounded-md text-[#dcdcd4] dark:text-white">
                 {userData.username}
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
-              <div className="mt-1 p-2 bg-gray-50 rounded-md">
+              <label className="block text-sm font-medium text-[#dcdcd4] dark:text-gray-300">Email</label>
+              <div className="mt-1 p-2 bg-[#2a2f2e] dark:bg-gray-700 rounded-md text-[#dcdcd4] dark:text-white">
                 {userData.email}
               </div>
             </div>

@@ -6,10 +6,13 @@ import {
   RiMapPinLine,
   RiCloudyLine,
   RiSunCloudyLine,
+  RiMoonLine,
 } from "react-icons/ri";
 import axios from "axios";
+import { useTheme } from "../context/ThemeContext";
 
-function Header({ activePage }) {
+function Header() {
+  const { isDarkMode, toggleDarkMode } = useTheme();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [weather, setWeather] = useState({
     temp: "--°C",
@@ -98,43 +101,51 @@ function Header({ activePage }) {
   };
 
   return (
-    <header style={{ backgroundColor: '#dddfd6', fontFamily: 'Tenor Sans'}}>
-      <div className="max-w-7xl mx-auto px-6 py-8" style={{ backgroundColor: '#dddfd6'}}>
+    <header className="bg-[#dddfd6] dark:bg-gray-900" style={{ fontFamily: 'Tenor Sans'}}>
+      <div className="max-w-7xl mx-auto px-6 py-8 bg-[#dddfd6] dark:bg-gray-900">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
           <div>
-            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
+            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-300">
               {navItems.find((item) => item.path === window.location.pathname)
                 ?.label || "Dashboard"}
             </h1>
-            <div className="flex items-center gap-2 mt-1 text-gray-500 text-sm">
-              <RiMapPinLine />
-              <span>{error ? "Location unavailable" : weather.location}</span>
-            </div>
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <div className="flex items-center backdrop-blur-sm bg-white/30 shadow-sm border border-white/50 px-4 py-2 rounded-xl">
+            <div className="flex items-center backdrop-blur-sm bg-white/30 dark:bg-gray-800/30 shadow-sm border border-white/50 dark:border-gray-700/50 px-4 py-2 rounded-xl">
+              <RiMapPinLine className="text-blue-500 dark:text-blue-400 mr-2" size={20} />
+              <div className="flex flex-col">
+                <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                  {error ? "Location unavailable" : weather.location}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  Current Location
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center backdrop-blur-sm bg-white/30 dark:bg-gray-800/30 shadow-sm border border-white/50 dark:border-gray-700/50 px-4 py-2 rounded-xl">
               {getWeatherIcon(weather.condition)}
               <div className="flex flex-col ml-2">
-                <span className="text-lg font-semibold text-gray-800">
+                <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                   {weather.temp}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-500 dark:text-gray-400">
                   {weather.condition}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center backdrop-blur-sm bg-white/30 shadow-sm border border-white/50 px-4 py-2 rounded-xl">
-              <RiTimeLine className="text-blue-500 mr-2" size={20} />
+            <div className="flex items-center backdrop-blur-sm bg-white/30 dark:bg-gray-800/30 shadow-sm border border-white/50 dark:border-gray-700/50 px-4 py-2 rounded-xl">
+              <RiTimeLine className="text-blue-500 dark:text-blue-400 mr-2" size={20} />
               <div className="flex flex-col">
-                <span className="text-lg font-semibold text-gray-800">
+                <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                   {currentTime.toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-500 dark:text-gray-400">
                   {currentTime.toLocaleDateString([], {
                     weekday: "short",
                     month: "short",
@@ -142,6 +153,26 @@ function Header({ activePage }) {
                   })}
                 </span>
               </div>
+            </div>
+
+            <div className="flex items-center backdrop-blur-sm bg-white/30 dark:bg-gray-800/30 shadow-sm border border-white/50 dark:border-gray-700/50 px-4 py-2 rounded-xl">
+              <button
+                onClick={toggleDarkMode}
+                className="flex flex-col items-center justify-center text-gray-800 dark:text-gray-200"
+                aria-label="Toggle dark mode"
+              >
+                {isDarkMode ? (
+                  <>
+                    <RiMoonLine className="text-gray-600 dark:text-gray-400" size={20} />
+                    <span className="text-xs mt-1">Dark</span>
+                  </>
+                ) : (
+                  <>
+                    <RiSunLine className="text-yellow-500 dark:text-yellow-400" size={20} />
+                    <span className="text-xs mt-1">Light</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>

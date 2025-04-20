@@ -38,6 +38,7 @@ const HelpCenterDashboard = () => {
 
     return (
         <div className="container-help-center">
+            <h1 className="text-3xl font-bold text-white dark:text-gray-200 mb-6">Help Center</h1>
             <div className="faq-container">
                 {faqs.map((faq, index) => (
                     <div key={index} className="faq-item">
