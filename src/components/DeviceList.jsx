@@ -51,6 +51,11 @@ function DeviceList() {
             d.id === device.id ? { ...d, status: updatedStatus } : d
           )
         );
+
+        // Emit device update to server
+        const emitPayload = { device_name: device.name, status: updatedStatus };
+        console.log('Emitting device:update:', emitPayload);
+        socket.emit('device:update', emitPayload);
       }
     } catch (err) {
       console.error('Failed to update device status:', err);
