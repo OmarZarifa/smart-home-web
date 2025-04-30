@@ -54,12 +54,17 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// refresh token every 30 seconds
+// refresh token every 30 seconds only if we have a token
 setInterval(async () => {
-  try {
-    await refreshAccessToken();
-  } catch (error) {
-    console.error("Automatic token refresh failed:", error);
+  const token = localStorage.getItem("accessToken");
+  if (token) {
+    try {
+      await refreshAccessToken();
+    } catch (error) {
+      console.error("Automatic token refresh failed:", error);
+      // Clear the token if refresh fails
+      localStorage.removeItem("accessToken");
+    }
   }
 }, 30000);
 
