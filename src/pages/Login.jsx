@@ -31,6 +31,7 @@ export default function Login() {
 
       if (response.data.error) {
         setError(response.data.error.message);
+        setLoading(false);
         return;
       }
 
@@ -41,6 +42,9 @@ export default function Login() {
       
       axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
+      // Clear any existing errors
+      setError("");
+      
       // Redirect to dashboard page
       navigate("/");
     } catch (err) {

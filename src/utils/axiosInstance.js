@@ -1,5 +1,4 @@
 import axios from "axios";
-import { refreshAccessToken } from "./auth";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
@@ -27,45 +26,15 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Add response interceptor to handle token refresh
+// Add response interceptor to handle errors
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
-  async (error) => {
-    const originalRequest = error.config;
-
-    // If error is 401 and we haven't tried to refresh token yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        const newToken = await refreshAccessToken();
-        
-        // Retry the original request with new token
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-        return Promise.reject(refreshError);
-      }
-    }
-
+  (error) => {
+    // Don't handle token refresh here, let auth.js handle it
     return Promise.reject(error);
   }
 );
-
-// refresh token every 30 seconds only if we have a token
-setInterval(async () => {
-  const token = localStorage.getItem("accessToken");
-  if (token) {
-    try {
-      await refreshAccessToken();
-    } catch (error) {
-      console.error("Automatic token refresh failed:", error);
-      // Clear the token if refresh fails
-      localStorage.removeItem("accessToken");
-    }
-  }
-}, 30000);
 
 export default axiosInstance; 

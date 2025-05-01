@@ -51,7 +51,10 @@ export const refreshAccessToken = async () => {
   } catch (err) {
     console.error("Refresh token failed:", err);
     localStorage.removeItem("accessToken");
-    window.location.href = "/login";
+    // Only redirect if we're not already on the login page and not trying to login
+    if (window.location.pathname !== '/login') {
+      window.location.href = "/login";
+    }
     throw err;
   }
 };
@@ -82,19 +85,32 @@ axios.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // If the error is 401 and we haven't tried to refresh the token yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        const newToken = await refreshAccessToken();
-        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
-        return axios(originalRequest);
-      } catch (refreshError) {
-        return Promise.reject(refreshError);
-      }
+    // Don't retry if:
+    // 1. It's not a 401 error
+    // 2. We've already tried to refresh
+    // 3. This is a login request (to prevent loops)
+    if (
+      error.response?.status !== 401 ||
+      originalRequest._retry ||
+      originalRequest.url === '/user/login'
+    ) {
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
+    originalRequest._retry = true;
+
+    try {
+      const newToken = await refreshAccessToken();
+      originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+      return axios(originalRequest);
+    } catch (refreshError) {
+      // If refresh token fails, clear everything and redirect to login
+      localStorage.removeItem("accessToken");
+      // Only redirect if we're not already on the login page
+      if (window.location.pathname !== '/login') {
+        window.location.href = "/login";
+      }
+      return Promise.reject(refreshError);
+    }
   }
 );
