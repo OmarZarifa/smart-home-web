@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
@@ -8,12 +8,25 @@ axios.defaults.withCredentials = true;
 // logout
 export const logout = async () => {
   try {
+    // Call backend to invalidate refresh token cookie
+    await axios.post(
+      `${API_URL}/user/logout`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+
+    // Remove access token from localStorage
     localStorage.removeItem("accessToken");
-      
+
     // Redirect to login page
     window.location.href = "/login";
   } catch (error) {
     console.error("Logout failed:", error);
+    // Even if the backend call fails, we should still clear local storage and redirect
+    localStorage.removeItem("accessToken");
+    window.location.href = "/login";
   }
 };
 
@@ -47,7 +60,7 @@ export const refreshAccessToken = async () => {
 export const isTokenExpired = (token) => {
   if (!token) return true;
   try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const payload = JSON.parse(atob(token.split(".")[1]));
     return payload.exp * 1000 < Date.now();
   } catch (error) {
     return true;
@@ -84,4 +97,4 @@ axios.interceptors.response.use(
 
     return Promise.reject(error);
   }
-); 
+);
