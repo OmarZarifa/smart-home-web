@@ -1,153 +1,142 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
+import logo from '../assets/logo.png';
 
 export default function Register() {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        username: "",
+        email: "",
+        password: "",
+    });
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
 
-    // Password validation
-    const password = formData.password;
-    const minLength = 8;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumbers = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        const password = formData.password;
+        const minLength = 8;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumbers = /\d/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-    if (password.length < minLength) {
-      setError(`Password must be at least ${minLength} characters long`);
-      setLoading(false);
-      return;
-    }
-    if (!hasUpperCase) {
-      setError("Password must contain at least one uppercase letter");
-      setLoading(false);
-      return;
-    }
-    if (!hasLowerCase) {
-      setError("Password must contain at least one lowercase letter");
-      setLoading(false);
-      return;
-    }
-    if (!hasNumbers) {
-      setError("Password must contain at least one number");
-      setLoading(false);
-      return;
-    }
-    if (!hasSpecialChar) {
-      setError("Password must contain at least one special character");
-      setLoading(false);
-      return;
-    }
+        if (password.length < minLength) {
+            setError(`Password must be at least ${minLength} characters long to meet security standards.`);
+            setLoading(false);
+            return;
+        }
+        if (!hasUpperCase) {
+            setError("Password must include at least one uppercase letter.");
+            setLoading(false);
+            return;
+        }
+        if (!hasLowerCase) {
+            setError("Password must include at least one lowercase letter.");
+            setLoading(false);
+            return;
+        }
+        if (!hasNumbers) {
+            setError("Password must include at least one numeric digit.");
+            setLoading(false);
+            return;
+        }
+        if (!hasSpecialChar) {
+            setError("Password must include at least one special character.");
+            setLoading(false);
+            return;
+        }
 
-    try {
-      const response = await axiosInstance.post("/user/register", formData);
 
-      if (response.data.error) {
-        setError(response.data.error.message);
-        return;
-      }
+        try {
+            console.log(formData)
+            const response = await axiosInstance.post("/user/register", formData);
+            console.log(response)
+            if (response.data.error) {
+                setError(response.data.error.message);
+                return;
+            }
 
-      // Registration successful, redirect to login
-      navigate("/login");
-    } catch (err) {
-      setError(err.response?.data?.error?.message || "An error occurred during registration");
-    } finally {
-      setLoading(false);
-    }
-  };
+            navigate("/login");
+        } catch (err) {
+            console.log(err)
+            setError(err.response?.data?.error?.message || "An error occurred during registration!");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
-          </h2>
+    return (
+        <div className="login-page-container">
+            <header className="login-logo-wrapper">
+                <img src={logo} alt="Logo" className="login-custom-size" />
+                <h1 className="login-logo-custom-text ">HomeSync</h1>
+            </header>
+            <div className="login-center-screen">
+                <div className="login-custom-login-box">
+                    <h2 className="login-custom-title">REGISTER</h2>
+                    <form className="space-y-8" onSubmit={handleSubmit}>
+                        <div className="space-y-6">
+                            <input
+                                type="text"
+                                name="username"
+                                placeholder="Username"
+                                required
+                                value={formData.username}
+                                onChange={handleChange}
+                                className="login-custom-input"
+                            />
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                required
+                                value={formData.email}
+                                onChange={handleChange}
+                                className="login-custom-input"
+                            />
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                required
+                                value={formData.password}
+                                onChange={handleChange}
+                                className="login-custom-input"
+                            />
+                        </div>
+                        {error && <div className="login-custom-error">{error}</div>}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="login-custom-button"
+                        >
+                            {loading ? "Creating Account..." : "CREATE ACCOUNT"}
+                        </button>
+                        <hr className="border-black" />
+                        <p className="login-custom-text-style">
+                            Already have an account?{" "}
+                            <a
+                                href="/login"
+                                className="login-custom-link">
+                                Login
+                            </a>
+                        </p>
+                    </form>
+                </div>
+            </div>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="username" className="sr-only">
-                Username
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Username"
-                value={formData.username}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
-          {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
-          )}
-
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              {loading ? "Registering..." : "Register"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+    );
 }

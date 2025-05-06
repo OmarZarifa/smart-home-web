@@ -128,15 +128,15 @@
     background-color: #e2e8f0;
 }
 
-.switch:hover input:checked + .slider {
+.switch:hover input:checked+.slider {
     background-color: #22c55e;
 }
 
-input:checked + .slider {
+input:checked+.slider {
     background-color: #22c55e;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
     transform: translateX(26px);
 }
 
@@ -485,86 +485,86 @@ input:checked + .slider:before {
 
 /* Dark mode styles */
 .dark .search-button {
-  color: #d1d5db;
+    color: #d1d5db;
 }
 
 .dark .search-input {
-  background-color: #1f2937;
-  color: #e5e7eb;
-  border-color: #374151;
+    background-color: #1f2937;
+    color: #e5e7eb;
+    border-color: #374151;
 }
 
 .dark .search-input::placeholder {
-  color: #9ca3af;
+    color: #9ca3af;
 }
 
 .dark .add-device-button {
-  background-color: #374151;
-  color: #e5e7eb;
+    background-color: #374151;
+    color: #e5e7eb;
 }
 
 .dark .add-device-button:hover {
-  background-color: #4b5563;
+    background-color: #4b5563;
 }
 
 .dark .device-item {
-  background-color: #1f2937;
-  border-color: #374151;
+    background-color: #1f2937;
+    border-color: #374151;
 }
 
 .dark .device-name {
-  color: #e5e7eb;
+    color: #e5e7eb;
 }
 
 .dark .device-button {
-  color: #d1d5db;
+    color: #d1d5db;
 }
 
 .dark .device-button:hover {
-  color: #e5e7eb;
+    color: #e5e7eb;
 }
 
 .dark .modal-overlay {
-  background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .dark .modal-content {
-  background-color: #1f2937;
-  color: #e5e7eb;
+    background-color: #1f2937;
+    color: #e5e7eb;
 }
 
 .dark .modal-title {
-  color: #e5e7eb;
+    color: #e5e7eb;
 }
 
 .dark .input-field {
-  background-color: #374151;
-  color: #e5e7eb;
-  border-color: #4b5563;
+    background-color: #374151;
+    color: #e5e7eb;
+    border-color: #4b5563;
 }
 
 .dark .input-field::placeholder {
-  color: #9ca3af;
+    color: #9ca3af;
 }
 
 .dark .cancel-button {
-  background-color: #374151;
-  color: #e5e7eb;
+    background-color: #374151;
+    color: #e5e7eb;
 }
 
 .dark .cancel-button:hover {
-  background-color: #4b5563;
+    background-color: #4b5563;
 }
 
 .dark .confirm-add-device-button,
 .dark .confirm-delete-device-button {
-  background-color: #2563eb;
-  color: #e5e7eb;
+    background-color: #2563eb;
+    color: #e5e7eb;
 }
 
 .dark .confirm-add-device-button:hover,
 .dark .confirm-delete-device-button:hover {
-  background-color: #1d4ed8;
+    background-color: #1d4ed8;
 }
 
 .device-list-container {
@@ -712,11 +712,11 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-input:checked + .slider {
+input:checked+.slider {
     background-color: #22c55e;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
     transform: translateX(26px);
 }
 
@@ -724,11 +724,10 @@ input:checked + .slider:before {
     background-color: #4b5563;
 }
 
-.switch:hover input:checked + .slider {
+.switch:hover input:checked+.slider {
     background-color: #22c55e;
 }
 
-/* Responsive Design */
 @media (min-width: 640px) {
     .device-list-container {
         padding: 1.5rem;
@@ -815,7 +814,7 @@ input:checked + .slider:before {
     background-color: #e2e8f0;
 }
 
-.dark input:checked + .slider {
+.dark input:checked+.slider {
     background-color: #22c55e;
 }
 
@@ -823,6 +822,149 @@ input:checked + .slider:before {
     background-color: #475569;
 }
 
-.dark .switch:hover input:checked + .slider {
+.dark .switch:hover input:checked+.slider {
     background-color: #22c55e;
+}
+
+.login-page-container {
+    min-height: 100vh;
+    background-color: #e1e3da;
+    position: relative;
+}
+
+.login-logo-wrapper {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.login-custom-size {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+}
+
+@media (min-width: 640px) {
+    .login-custom-size {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+}
+
+.login-logo-custom-text {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: black;
+    font-family: Tenor Sans;
+}
+
+@media (min-width: 640px) {
+    .login-logo-custom-text {
+        font-size: 1.25rem;
+    }
+}
+
+.login-center-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-custom-login-box {
+    width: 100%;
+    max-width: 48rem;
+    background-color: #dddfd6;
+    border: 10px solid black;
+    border-radius: 30px;
+    padding: 5rem 4rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.login-custom-title {
+    text-align: center;
+    font-size: 1.875rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: black;
+    margin-bottom: 3rem;
+}
+
+
+.login-custom-input {
+    width: 100%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-radius: 9999px;
+    background-color: #a5a59a;
+    color: white;
+    text-align: center;
+    font-size: 1.125rem;
+    outline: none;
+}
+
+.login-custom-input::placeholder {
+    color: white;
+}
+
+.login-custom-button {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border-radius: 9999px;
+    background-color: #888589;
+    color: white;
+    font-weight: bold;
+    font-size: 1.125rem;
+    outline: none;
+    transition: background-color 0.2s ease;
+}
+
+.login-custom-button:hover {
+    background-color: #777577;
+}
+
+.login-custom-link {
+    text-align: center;
+    font-size: 1rem;
+    color: black;
+    cursor: pointer;
+    transition: text-decoration 0.2s ease;
+}
+
+.login-custom-link:hover {
+    text-decoration: underline;
+}
+
+.login-custom-line-separator {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-color: black;
+}
+
+.login-custom-text-style {
+    text-align: center;
+    font-size: 1rem;
+    color: black;
+}
+
+.login-custom-link {
+    font-weight: 600;
+    text-decoration: underline;
+    color: black;
+    transition: color 0.2s ease-in-out;
+}
+
+.login-custom-link:hover {
+    color: #374151;
+}
+
+.login-custom-error {
+    color: #ef4444;
+    font-size: 0.875rem;
+    text-align: center;
 }
