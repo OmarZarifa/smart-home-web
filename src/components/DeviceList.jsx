@@ -53,89 +53,88 @@ function DeviceList() {
           )
         );
 
-        // Emit device update to server
-        const emitPayload = { device_name: device.name, status: updatedStatus };
+        // Emit only ON/OFF as the server expects
+        const emitPayload = {
+          device_name: device.name,
+          status: updatedLightStatus
+        };
         console.log('Emitting device:update:', emitPayload);
         socket.emit('device:update', emitPayload);
       }
-      // Emit device update to server
-      const emitPayload = { device_name: device.name, status: updatedLightStatus };
-      console.log('Emitting device:update:', emitPayload);
-      socket.emit('device:update', emitPayload);
-      
     } catch (err) {
-    console.error('Failed to update device status:', err);
-  }
-};
+      console.error('Failed to update device status:', err);
+    }
+  };
 
-return (
-  <div className="device-list-container">
-    <div className="device-list-header">
-      <div className="device-list-title-container">
-        <h1 className="device-list-title">
-          My Devices
-        </h1>
-        <div className="search-container">
-          <FaSearch className="search-button" />
-          <input type="text" placeholder="Search devices..." className="search-input" />
+
+  return (
+    <div className="device-list-container">
+      <div className="device-list-header">
+        <div className="device-list-title-container">
+          <h1 className="device-list-title">
+            My Devices
+          </h1>
+          <div className="search-container">
+            <FaSearch className="search-button" />
+            <input type="text" placeholder="Search devices..." className="search-input" />
+          </div>
         </div>
       </div>
+
+      <div className="device-list-spacer"></div>
+
+      {devices.length === 0 ? (
+        <p>No devices found.</p>
+      ) : (
+        <div className="device-grid">
+          {devices.map((device) => (
+            <div key={device.id} className="device-item">
+              <div className="device-header">
+                <h3 className="device-name">
+                  {device.name} ({device.type})
+                </h3>
+              </div>
+
+              <br />
+
+              <div className="device-info">
+                <p>
+                  Created:{' '}
+                  {new Date(device.created_at)
+                    .toISOString()
+                    .slice(0, 16)
+                    .replace('T', ' ')}
+                </p>
+              </div>
+
+              <div className="device-info">
+                <p>
+                  Last Updated:{' '}
+                  {new Date(device.modified_at)
+                    .toISOString()
+                    .slice(0, 16)
+                    .replace('T', ' ')}
+                </p>
+              </div>
+
+              <div className="device-info">
+                <p>Status: {device.status ? 'ON' : 'OFF'}</p>
+              </div>
+
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={device.status}
+                  onChange={() => toggleDeviceStatus(device)}
+                />
+                <span className="slider round"></span>
+              </label>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
-
-    <div className="device-list-spacer"></div>
-
-    {devices.length === 0 ? (
-      <p>No devices found.</p>
-    ) : (
-      <div className="device-grid">
-        {devices.map((device) => (
-          <div key={device.id} className="device-item">
-            <div className="device-header">
-              <h3 className="device-name">
-                {device.name} ({device.type})
-              </h3>
-            </div>
-
-            <br />
-
-            <div className="device-info">
-              <p>
-                Created:{' '}
-                {new Date(device.created_at)
-                  .toISOString()
-                  .slice(0, 16)
-                  .replace('T', ' ')}
-              </p>
-            </div>
-
-            <div className="device-info">
-              <p>
-                Last Updated:{' '}
-                {new Date(device.modified_at)
-                  .toISOString()
-                  .slice(0, 16)
-                  .replace('T', ' ')}
-              </p>
-            </div>
-
-            <div className="device-info">
-              <p>Status: {device.status ? 'ON' : 'OFF'}</p>
-            </div>
-
-            <label className="switch">
-              <input
-                type="checkbox"
-                checked={device.status}
-                onChange={() => toggleDeviceStatus(device)}
-              />
-              <span className="slider round"></span>
-            </label>
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-);
+  );
 }
 
 export default DeviceList;
