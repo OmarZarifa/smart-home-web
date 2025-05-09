@@ -134,6 +134,12 @@ export default function Profile() {
 				return;
 			}
 
+			// Check if token is expired and refresh if needed
+			const token = localStorage.getItem('accessToken');
+			if (isTokenExpired(token)) {
+				await refreshAccessToken();
+			}
+
 			// Only include fields that have been changed
 			const updateData = {};
 			if (editData.username !== userData.username) updateData.username = editData.username;
@@ -164,8 +170,22 @@ export default function Profile() {
 			setHasChanges(false);
 		} catch (err) {
 			console.error("Update error:", err);
-			setErrorMessage("Failed to update profile!")
-			setError(err.response?.data?.error?.message || "Failed to update profile");
+			if (err.response?.status === 401) {
+				try {
+					await refreshAccessToken();
+					// Retry the update after token refresh
+					handleProfileSubmit(e);
+					return;
+				} catch (refreshError) {
+					setErrorMessage("Session expired. Please login again.");
+					setTimeout(() => {
+						window.location.href = "/login";
+					}, 2000);
+				}
+			} else {
+				setErrorMessage("Failed to update profile!")
+				setError(err.response?.data?.error?.message || "Failed to update profile");
+			}
 		} finally {
 			setLoading(false);
 		}
@@ -183,6 +203,12 @@ export default function Profile() {
 			if (!id) {
 				setError("Invalid session. Please login again.");
 				return;
+			}
+
+			// Check if token is expired and refresh if needed
+			const token = localStorage.getItem('accessToken');
+			if (isTokenExpired(token)) {
+				await refreshAccessToken();
 			}
 
 			if (editData.newPassword !== editData.confirmPassword) {
@@ -217,8 +243,22 @@ export default function Profile() {
 			setSuccessMessage("Password updated successfully!");
 		} catch (err) {
 			console.error("Update error:", err);
-			setErrorMessage("Failed to update password!")
-			setError(err.response?.data?.error?.message || "Failed to update password");
+			if (err.response?.status === 401) {
+				try {
+					await refreshAccessToken();
+					// Retry the password update after token refresh
+					handlePasswordSubmit(e);
+					return;
+				} catch (refreshError) {
+					setErrorMessage("Session expired. Please login again.");
+					setTimeout(() => {
+						window.location.href = "/login";
+					}, 2000);
+				}
+			} else {
+				setErrorMessage("Failed to update password!")
+				setError(err.response?.data?.error?.message || "Failed to update password");
+			}
 		} finally {
 			setLoading(false);
 		}
