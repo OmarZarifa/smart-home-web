@@ -156,6 +156,9 @@ export default function Profile() {
 				...prev,
 				username: response.data.data.username,
 				email: response.data.data.email,
+				// Preserve the password fields
+				newPassword: prev.newPassword,
+				confirmPassword: prev.confirmPassword
 			}));
 			setSuccessMessage("Profile updated successfully!");
 			setHasChanges(false);
