@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import { refreshAccessToken, isTokenExpired } from "../utils/auth";
-import { FaUser } from 'react-icons/fa';
+import { FaUser, FaLock } from 'react-icons/fa';
 
 
 // get user ID from token
@@ -26,14 +26,15 @@ export default function Profile() {
 	});
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
-	const [isEditing, setIsEditing] = useState(false);
+	const [showPasswordForm, setShowPasswordForm] = useState(false);
 	const [editData, setEditData] = useState({
 		username: "",
 		email: "",
+		newPassword: "",
+		confirmPassword: "",
 	});
 	const [successMessage, setSuccessMessage] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
-
 	const [hasChanges, setHasChanges] = useState(false);
 
 	useEffect(() => {
@@ -89,6 +90,8 @@ export default function Profile() {
 			setEditData({
 				username: response.data.data.username,
 				email: response.data.data.email,
+				newPassword: "",
+				confirmPassword: "",
 			});
 		} catch (err) {
 			if (err.response?.status === 401) {
@@ -109,13 +112,15 @@ export default function Profile() {
 			...prev,
 			[name]: value
 		}));
-		// Check if there are any changes
-		const hasUsernameChanged = name === 'username' && value !== userData.username;
-		const hasEmailChanged = name === 'email' && value !== userData.email;
-		setHasChanges(hasUsernameChanged || hasEmailChanged);
 	};
 
-	const handleSubmit = async (e) => {
+	useEffect(() => {
+		const hasUsernameChanged = editData.username !== userData.username;
+		const hasEmailChanged = editData.email !== userData.email;
+		setHasChanges(hasUsernameChanged || hasEmailChanged);
+	}, [editData, userData]);
+
+	const handleProfileSubmit = async (e) => {
 		e.preventDefault();
 		setError("");
 		setSuccessMessage("");
@@ -127,6 +132,12 @@ export default function Profile() {
 			if (!id) {
 				setError("Invalid session. Please login again.");
 				return;
+			}
+
+			// Check if token is expired and refresh if needed
+			const token = localStorage.getItem('accessToken');
+			if (isTokenExpired(token)) {
+				await refreshAccessToken();
 			}
 
 			// Only include fields that have been changed
@@ -147,17 +158,107 @@ export default function Profile() {
 			}
 
 			setUserData(response.data.data);
-			setEditData({
+			setEditData(prev => ({
+				...prev,
 				username: response.data.data.username,
 				email: response.data.data.email,
-			});
-			setIsEditing(false);
+				// Preserve the password fields
+				newPassword: prev.newPassword,
+				confirmPassword: prev.confirmPassword
+			}));
 			setSuccessMessage("Profile updated successfully!");
 			setHasChanges(false);
 		} catch (err) {
 			console.error("Update error:", err);
-			setErrorMessage("Failed to update profile!")
-			setError(err.response?.data?.error?.message || "Failed to update profile");
+			if (err.response?.status === 401) {
+				try {
+					await refreshAccessToken();
+					// Retry the update after token refresh
+					handleProfileSubmit(e);
+					return;
+				} catch (refreshError) {
+					setErrorMessage("Session expired. Please login again.");
+					setTimeout(() => {
+						window.location.href = "/login";
+					}, 2000);
+				}
+			} else {
+				setErrorMessage("Failed to update profile!")
+				setError(err.response?.data?.error?.message || "Failed to update profile");
+			}
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const handlePasswordSubmit = async (e) => {
+		e.preventDefault();
+		setError("");
+		setSuccessMessage("");
+		setErrorMessage("");
+		setLoading(true);
+
+		try {
+			const id = getUserIdFromToken();
+			if (!id) {
+				setError("Invalid session. Please login again.");
+				return;
+			}
+
+			// Check if token is expired and refresh if needed
+			const token = localStorage.getItem('accessToken');
+			if (isTokenExpired(token)) {
+				await refreshAccessToken();
+			}
+
+			if (editData.newPassword !== editData.confirmPassword) {
+				setError("New passwords do not match");
+				setLoading(false);
+				return;
+			}
+
+			// Password validation regex
+			const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-+?_=,<>/]).{8,}$/;
+			if (!passwordPattern.test(editData.newPassword)) {
+				setError("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character");
+				setLoading(false);
+				return;
+			}
+
+			const response = await axiosInstance.patch(`/user/${id}`, {
+				password: editData.newPassword
+			});
+
+			if (response.data.error) {
+				setError(response.data.error.message);
+				return;
+			}
+
+			setEditData(prev => ({
+				...prev,
+				newPassword: "",
+				confirmPassword: "",
+			}));
+			setShowPasswordForm(false);
+			setSuccessMessage("Password updated successfully!");
+		} catch (err) {
+			console.error("Update error:", err);
+			if (err.response?.status === 401) {
+				try {
+					await refreshAccessToken();
+					// Retry the password update after token refresh
+					handlePasswordSubmit(e);
+					return;
+				} catch (refreshError) {
+					setErrorMessage("Session expired. Please login again.");
+					setTimeout(() => {
+						window.location.href = "/login";
+					}, 2000);
+				}
+			} else {
+				setErrorMessage("Failed to update password!")
+				setError(err.response?.data?.error?.message || "Failed to update password");
+			}
 		} finally {
 			setLoading(false);
 		}
@@ -178,7 +279,7 @@ export default function Profile() {
 					<FaUser className="update-user-icon-style" />
 					<h2 className="update-user-label-text">User Information</h2>
 				</div>
-				<form onSubmit={handleSubmit} className="space-y-6">
+				<form onSubmit={handleProfileSubmit} className="space-y-6">
 					<div className="update-user-grid-3-cols">
 						<label className="update-user-text-sm-medium">Username</label>
 						<input
@@ -214,26 +315,59 @@ export default function Profile() {
 						<button
 							type="submit"
 							disabled={loading || !hasChanges}
-							className={`update-user-cancel-button ${!hasChanges ? 'opacity-50 cursor-not-allowed' : ''
-								}`}
+							className={`update-user-cancel-button ${!hasChanges ? 'opacity-50 cursor-not-allowed' : ''}`}
 						>
-							{loading ? "Saving..." : "Update"}
+							{loading ? "Saving..." : "Update Profile"}
 						</button>
 						<button
 							type="button"
-							onClick={() => {
-								setIsEditing(false);
-								setEditData({
-									username: userData.username,
-									email: userData.email,
-								});
-							}}
+							onClick={() => setShowPasswordForm(!showPasswordForm)}
 							className="update-user-cancel-button"
 						>
-							Cancel
+							{showPasswordForm ? "Cancel Password Change" : "Change Password"}
 						</button>
 					</div>
 				</form>
+
+				{showPasswordForm && (
+					<form onSubmit={handlePasswordSubmit} className="mt-8 space-y-6">
+						<div className="update-user-row">
+							<FaLock className="update-user-icon-style" />
+							<h2 className="update-user-label-text">Change Password</h2>
+						</div>
+						<div className="update-user-grid-3-cols">
+							<label className="update-user-text-sm-medium">New Password</label>
+							<input
+								type="password"
+								name="newPassword"
+								value={editData.newPassword}
+								onChange={handleEditChange}
+								className="update-user-input-field"
+								placeholder="Enter new password"
+							/>
+						</div>
+						<div className="update-user-grid-3-cols">
+							<label className="update-user-text-sm-medium">Confirm New Password</label>
+							<input
+								type="password"
+								name="confirmPassword"
+								value={editData.confirmPassword}
+								onChange={handleEditChange}
+								className="update-user-input-field"
+								placeholder="Confirm new password"
+							/>
+						</div>
+						<div className="flex justify-end pt-6">
+							<button
+								type="submit"
+								disabled={loading || !editData.newPassword || !editData.confirmPassword}
+								className={`update-user-cancel-button ${(!editData.newPassword || !editData.confirmPassword) ? 'opacity-50 cursor-not-allowed' : ''}`}
+							>
+								{loading ? "Saving..." : "Update Password"}
+							</button>
+						</div>
+					</form>
+				)}
 			</div>
 		</div>
 	);
