@@ -1,4 +1,5 @@
 import axios from "axios";
+import { refreshAccessToken } from "./auth";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
@@ -26,15 +27,42 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Add response interceptor to handle errors
 axiosInstance.interceptors.response.use(
   (response) => {
-    return response;
+    return response
   },
-  (error) => {
-    // Don't handle token refresh here, let auth.js handle it
-    return Promise.reject(error);
+  async (error) => {
+    const originalRequest = error.config;
+
+    // Don't retry if:
+    // 1. It's not a 401 error
+    // 2. We've already tried to refresh
+    // 3. This is a login request (to prevent loops)
+    if (
+      error.response?.status !== 401 ||
+      originalRequest._retry ||
+      originalRequest.url === '/user/login'
+    ) {
+      return Promise.reject(error);
+    }
+
+    originalRequest._retry = true;
+
+    try {
+      const newToken = await refreshAccessToken();
+      localStorage.setItem("accessToken", newToken);
+      originalRequest.headers["Authorization"] = `${newToken}`;
+      return axios(originalRequest);
+    } catch (refreshError) {
+      localStorage.removeItem("accessToken");
+
+      if (window.location.pathname !== '/login') {
+        window.location.href = "/login";
+      }
+      return Promise.reject(refreshError);
+    }
   }
 );
+
 
 export default axiosInstance; 
