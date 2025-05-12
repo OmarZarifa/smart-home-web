@@ -10,7 +10,6 @@ export default function VoiceRecognition() {
 
   useEffect(() => {
     fetchDevices();
-
     socket.on('device:update', (updatedDevice) => {
       setDevices((prevDevices) =>
         prevDevices.map((device) =>
@@ -36,11 +35,7 @@ export default function VoiceRecognition() {
   };
 
   const normalize = (text) =>
-    text
-      .replace(/_/g, ' ')        
-      .replace(/[^\w\s]/g, '')   
-      .toLowerCase()
-      .trim();
+    text.replace(/_/g, ' ').replace(/[^\w\s]/g, '').toLowerCase().trim();
 
   const toggleDeviceStatus = async (device, newStatusString) => {
     const booleanStatus = newStatusString === 'ON';
@@ -59,10 +54,9 @@ export default function VoiceRecognition() {
         );
       }
 
-      // Emit device update to server 
       const emitPayload = {
         device_name: device.name,
-        status: newStatusString
+        status: newStatusString,
       };
 
       console.log('Emitting device:update:', emitPayload);
@@ -137,21 +131,62 @@ export default function VoiceRecognition() {
   };
 
   return (
-    <div className="min-h-screen bg-[#1f1f1f] text-white flex flex-col items-center justify-center p-8">
-      <h1 className="text-4xl font-bold mb-4">Voice Recognition</h1>
-      <p className="text-lg mb-6 text-gray-300">
-      Say "turn on the [device name]" or "turn off the [device name]"
-     </p>
-      <button
-        onClick={isListening ? stopListening : startListening}
-        className={`px-6 py-3 rounded-2xl text-lg font-semibold transition-colors ${
-          isListening
-            ? 'bg-red-600 hover:bg-red-700'
-            : 'bg-green-600 hover:bg-green-700'
-        }`}
-      >
-        {isListening ? 'Stop Listening' : 'Start Voice Control'}
-      </button>
+    <div
+      className="min-h-screen flex items-start justify-center px-4 pt-10 pb-20"
+      style={{ backgroundColor: '#6e6e61' }}
+    >
+      <div className="w-full max-w-2xl rounded-3xl px-6 sm:px-10 py-10 text-center bg-white/10 backdrop-blur-md border border-black/10 shadow-md">
+        {/* Mic Icon */}
+        <div className="flex justify-center mb-8">
+          <div
+            className={`w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 ${
+              isListening ? 'bg-green-500 animate-ping-slow' : 'bg-black/10'
+            }`}
+          >
+            <svg
+              className="w-10 h-10 text-white"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 18.25v3.25m0-3.25a6.5 6.5 0 006.5-6.5V9.75m-13 2c0 3.59 2.91 6.5 6.5 6.5m0-13.5v7.5m0-7.5a2 2 0 012 2v3.5a2 2 0 01-4 0V8.75a2 2 0 012-2z"
+              />
+            </svg>
+          </div>
+        </div>
+
+        {/* Say a Command */}
+        <div className="bg-white/10 border border-white/10 rounded-xl p-6 text-left">
+          <h2 className="text-black font-bold text-lg mb-2 tracking-tight">Say a Command</h2>
+          <p className="text-sm text-gray-800 font-medium">
+            You can say one of the following:
+          </p>
+          <div className="mt-4 space-y-3 font-mono text-sm">
+            <div className="bg-[#5f615a] text-white px-4 py-2 rounded-lg tracking-wide shadow-inner border border-white/10">
+              turn on the <span className="text-gray-200 italic">[device name]</span>
+            </div>
+            <div className="bg-[#5f615a] text-white px-4 py-2 rounded-lg tracking-wide shadow-inner border border-white/10">
+              turn off the <span className="text-gray-200 italic">[device name]</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Start/Stop Button */}
+        <button
+          onClick={isListening ? stopListening : startListening}
+          className={`mt-10 w-full py-3 rounded-xl text-lg font-semibold tracking-tight transition-all duration-300 ${
+            isListening
+              ? 'bg-red-600 hover:bg-red-700'
+              : 'bg-green-600 hover:bg-green-700'
+          }`}
+        >
+          {isListening ? 'Stop Listening' : 'Start Voice Control'}
+        </button>
+      </div>
     </div>
   );
 }
