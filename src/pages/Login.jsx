@@ -71,6 +71,11 @@ export default function Login() {
           <h2 className="login-custom-title">LOGIN</h2>
 
           <form className="space-y-8" onSubmit={handleSubmit}>
+            {error && (
+              <div className="text-red-500 text-sm mb-4 text-center">
+                {error}
+              </div>
+            )}
             <input
               type="text"
               name="username"
@@ -103,7 +108,7 @@ export default function Login() {
             <hr className="border-black" />
 
             <p className="login-custom-text-style">
-              Don’t have an account?{" "}
+              Don't have an account?{" "}
               <a
                 href="/register"
                 className="login-custom-link"

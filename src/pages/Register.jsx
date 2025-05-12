@@ -61,18 +61,34 @@ export default function Register() {
 
 
         try {
-            console.log(formData)
+            console.log('Attempting registration with:', formData);
             const response = await axiosInstance.post("/user/register", formData);
-            console.log(response)
+            console.log('Registration response:', response);
+            
             if (response.data.error) {
                 setError(response.data.error.message);
+                setLoading(false);
                 return;
             }
 
+            console.log('Registration successful, navigating to /login');
             navigate("/login");
         } catch (err) {
-            console.log(err)
-            setError(err.response?.data?.error?.message || "An error occurred during registration!");
+            console.log('Full error object:', err);
+            console.log('Error response data:', err.response?.data);
+            console.log('Error status:', err.response?.status);
+            
+            // Handle 401 specifically
+            if (err.response?.status === 401) {
+                setError("This username or email is already registered. Please try a different one.");
+            } else {
+                // Handle other errors
+                const errorMessage = err.response?.data?.error?.message || 
+                                   err.response?.data?.message || 
+                                   "An error occurred during registration. Please try again.";
+                setError(errorMessage);
+            }
+            setLoading(false);
         } finally {
             setLoading(false);
         }
