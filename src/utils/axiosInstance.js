@@ -38,10 +38,12 @@ axiosInstance.interceptors.response.use(
     // 1. It's not a 401 error
     // 2. We've already tried to refresh
     // 3. This is a login request (to prevent loops)
+    // 4. This is a registration request (to prevent redirect)
     if (
       error.response?.status !== 401 ||
       originalRequest._retry ||
-      originalRequest.url === '/user/login'
+      originalRequest.url === '/user/login' ||
+      originalRequest.url === '/user/register'
     ) {
       return Promise.reject(error);
     }

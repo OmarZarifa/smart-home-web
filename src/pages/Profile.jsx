@@ -170,7 +170,7 @@ export default function Profile() {
 			setHasChanges(false);
 		} catch (err) {
 			console.error("Update error:", err);
-			if (err.response?.status === 401) {
+			if (err.response?.status === 401 && err.response?.data?.error?.message === "Token Expired") {
 				try {
 					await refreshAccessToken();
 					// Retry the update after token refresh
@@ -183,8 +183,7 @@ export default function Profile() {
 					}, 2000);
 				}
 			} else {
-				setErrorMessage("Failed to update profile!")
-				setError(err.response?.data?.error?.message || "Failed to update profile");
+				setErrorMessage(err.response?.data?.error?.message || "Failed to update profile!");
 			}
 		} finally {
 			setLoading(false);
@@ -217,10 +216,36 @@ export default function Profile() {
 				return;
 			}
 
-			// Password validation regex
-			const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-+?_=,<>/]).{8,}$/;
-			if (!passwordPattern.test(editData.newPassword)) {
-				setError("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character");
+			// Password validation (copied from Register.jsx)
+			const password = editData.newPassword;
+			const minLength = 8;
+			const hasUpperCase = /[A-Z]/.test(password);
+			const hasLowerCase = /[a-z]/.test(password);
+			const hasNumbers = /\d/.test(password);
+			const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+			if (password.length < minLength) {
+				setError(`Password must be at least ${minLength} characters long to meet security standards.`);
+				setLoading(false);
+				return;
+			}
+			if (!hasUpperCase) {
+				setError("Password must include at least one uppercase letter.");
+				setLoading(false);
+				return;
+			}
+			if (!hasLowerCase) {
+				setError("Password must include at least one lowercase letter.");
+				setLoading(false);
+				return;
+			}
+			if (!hasNumbers) {
+				setError("Password must include at least one numeric digit.");
+				setLoading(false);
+				return;
+			}
+			if (!hasSpecialChar) {
+				setError("Password must include at least one special character.");
 				setLoading(false);
 				return;
 			}
@@ -243,7 +268,7 @@ export default function Profile() {
 			setSuccessMessage("Password updated successfully!");
 		} catch (err) {
 			console.error("Update error:", err);
-			if (err.response?.status === 401) {
+			if (err.response?.status === 401 && err.response?.data?.error?.message === "Token Expired") {
 				try {
 					await refreshAccessToken();
 					// Retry the password update after token refresh
@@ -256,8 +281,7 @@ export default function Profile() {
 					}, 2000);
 				}
 			} else {
-				setErrorMessage("Failed to update password!")
-				setError(err.response?.data?.error?.message || "Failed to update password");
+				setErrorMessage(err.response?.data?.error?.message || "Failed to update password!");
 			}
 		} finally {
 			setLoading(false);
@@ -357,6 +381,9 @@ export default function Profile() {
 								placeholder="Confirm new password"
 							/>
 						</div>
+						{error && (
+							<div className="update-user-error-alert">{error}</div>
+						)}
 						<div className="flex justify-end pt-6">
 							<button
 								type="submit"
