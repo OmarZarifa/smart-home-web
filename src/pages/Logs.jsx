@@ -1,16 +1,27 @@
-import React from "react";
-import { FaEnvelope, FaCheckCircle, FaTimesCircle, FaSearch } from 'react-icons/fa';
+import React, { useState, useEffect  } from 'react';
+import { FaUser, FaSearch } from 'react-icons/fa';
 import '../components/styles.css';
+import axiosInstance from '../utils/axiosInstance';
 
-//TODO Replace hardcoded examples with actual data from the database (to be implemented)
-const logsData = [
-    { email: 'user1@example.com', action: 'Login', success: true },
-    { email: 'user2@example.com', action: 'Added device', success: false },
-    { email: 'user3@example.com', action: 'Deleted device', success: true },
-    { email: 'user4@example.com', action: 'Updated device', success: false },
-];
+function LogsList() {
+    const [logs, setLogs] = useState([]);
 
-export default function Rooms() {
+    const fetchLogs = async () => {
+        try {
+            const response = await axiosInstance.get('/logs');
+            if (response.data.data) {
+                setLogs(response.data.data.logs);
+            }
+        } catch (err) {
+            console.error('Failed to fetch logs:', err);
+        }
+    };
+
+    useEffect(() => {
+        fetchLogs();
+    }, []);
+
+
     return (
         <div className="min-h-screen bg-[#76766b] dark:bg-gray-900 p-8">
             <div className="flex items-center gap-4 mb-6">
@@ -30,30 +41,30 @@ export default function Rooms() {
                 <thead>
                     <tr className="bg-[#1c2120] dark:bg-gray-800 text-white">
                         <th className="p-4 text-left flex items-center">
-                            <FaEnvelope className="mr-2" />
-                            Email
+                            <FaUser className="mr-2" />
+                            User
                         </th>
+                        <th className="p-4 text-left">Role</th>
                         <th className="p-4 text-left">Action</th>
-                        <th className="p-4 text-left">Success</th>
+                        <th className="p-4 text-left">Device</th>
+                        <th className="p-4 text-left">Time Updated</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {logsData.map((log, index) => (
+                    {logs.map((log, index) => (
                         <tr
                             key={index}
-                            className={`${
-                                index % 2 === 0 ? 'bg-[#2a2f2e] dark:bg-gray-800/50' : 'bg-[#1c2120] dark:bg-gray-800'
-                            } text-white`}
+                            className={`${index % 2 === 0 ? 'bg-[#2a2f2e] dark:bg-gray-800/50' : 'bg-[#1c2120] dark:bg-gray-800'
+                                } text-white`}
                         >
-                            <td className="p-4">{log.email}</td>
+                            <td className="p-4">{log.user_id}</td>
+                            <td className="p-4">{log.role}</td>
                             <td className="p-4">{log.action}</td>
-                            <td className="p-4">
-                                {log.success ? (
-                                    <FaCheckCircle className="text-green-500" />
-                                ) : (
-                                    <FaTimesCircle className="text-red-500" />
-                                )}
-                            </td>
+                            <td className="p-4">{log.device_id}</td>
+                            <td className="p-4">{new Date(log.created_at)
+                                        .toISOString()
+                                        .slice(0, 16)
+                                        .replace('T', ' ')}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -61,3 +72,5 @@ export default function Rooms() {
         </div>
     );
 }
+
+export default LogsList;
