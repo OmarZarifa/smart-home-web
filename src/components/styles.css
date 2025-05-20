@@ -34,17 +34,17 @@
 }
 
 .device-item {
-    background-color: #000000;
-    border: 1px solid #76766b;
+    background-color: #1c2120;
+    border: 1px solid #2c3131;
     padding: 15px;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
     align-items: flex-start;
     min-height: 180px;
+    transition: all 0.2s;
 }
 
 .dark .device-item {
@@ -71,7 +71,7 @@
 .device-info h3 {
     margin: 0;
     font-size: 1.25rem;
-    color: #ffffff;
+    color: #dcdcd4;
 }
 
 .device-info p {
@@ -182,7 +182,7 @@ input:checked+.slider:before {
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.25rem;
-    background-color: #3b82f6;
+    background-color: #000000;
     color: white;
     border: none;
     border-radius: 9999px;
@@ -633,15 +633,6 @@ input:checked+.slider:before {
     grid-template-columns: repeat(1, 1fr);
     gap: 1rem;
     margin-top: 1.5rem;
-}
-
-.device-item {
-    background-color: #1c2120;
-    border: 1px solid #2c3131;
-    border-radius: 0.75rem;
-    padding: 1.25rem;
-    transition: all 0.2s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .device-item:hover {
