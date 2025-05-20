@@ -16,6 +16,7 @@ function DeviceList() {
     const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [isUpdateDialogOpen, setUpdateDialogOpen] = useState(false);
     const [selectedDevice, setSelectedDevice] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         fetchDevices();
@@ -102,6 +103,10 @@ function DeviceList() {
         setDevices(devices.filter((device) => device.id !== deletedDevice.id));
     };
 
+    const filteredDevices = devices.filter((device) =>
+        device.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="device-list-container">
             <div className="device-list-header">
@@ -111,7 +116,13 @@ function DeviceList() {
                     </h1>
                     <div className="search-container">
                         <FaSearch className="search-button" />
-                        <input type="text" placeholder="Search devices..." className="search-input" />
+                        <input
+                            type="text"
+                            placeholder="Search devices..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="search-input"
+                            />
                     </div>
                 </div>
 
@@ -131,11 +142,11 @@ function DeviceList() {
 
             <div className="device-list-spacer"></div>
 
-            {devices.length === 0 ? (
+            {filteredDevices.length === 0 ? (
                 <p>No devices found.</p>
             ) : (
                 <div className="device-grid">
-                    {devices.map((device) => (
+                    {filteredDevices.map((device) => (
                         <div key={device.id} className="device-item">
                             <div className="device-header">
                                 <h3 className="device-name">
