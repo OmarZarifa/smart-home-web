@@ -194,7 +194,10 @@ function DeviceList() {
                             </div>
 
                             <div className="device-info">
-                                <p>Status: {device.status ? 'ON' : 'OFF'}</p>
+                                <p>Status: {device.type === "SERVO"
+                                    ? (device.status ? 'OPEN' : 'CLOSED')
+                                    : (device.status ? 'ON' : 'OFF')}
+                                </p>
                             </div>
 
                             <label className="switch">
