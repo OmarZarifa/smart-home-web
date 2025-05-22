@@ -9,6 +9,49 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.all-devices-scrollable {
+    position: absolute;
+    top: 210px; 
+    right: 20px; 
+    width: 250px; 
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.addable-device-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0.3rem;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.addable-device-item:last-child {
+    border-bottom: none;
+}
+
+.addable-device-item button {
+    background-color: #0a0a0a;
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.addable-device-item button:hover {
+    background-color: #484948;
+}
+
 .dark .dashboard {
     background-color: #1e293b;
 }

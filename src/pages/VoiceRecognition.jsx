@@ -139,9 +139,8 @@ export default function VoiceRecognition() {
         {/* Mic Icon */}
         <div className="flex justify-center mb-8">
           <div
-            className={`w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 ${
-              isListening ? 'bg-green-500 animate-ping-slow' : 'bg-black/10'
-            }`}
+            className={`w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 ${isListening ? 'bg-green-500 animate-ping-slow' : 'bg-black/10'
+              }`}
           >
             <svg
               className="w-10 h-10 text-white"
@@ -178,11 +177,10 @@ export default function VoiceRecognition() {
         {/* Start/Stop Button */}
         <button
           onClick={isListening ? stopListening : startListening}
-          className={`mt-10 w-full py-3 rounded-xl text-lg font-semibold tracking-tight transition-all duration-300 ${
-            isListening
+          className={`mt-10 w-full py-3 rounded-xl text-lg font-semibold tracking-tight transition-all duration-300 ${isListening
               ? 'bg-red-600 hover:bg-red-700'
               : 'bg-green-600 hover:bg-green-700'
-          }`}
+            }`}
         >
           {isListening ? 'Stop Listening' : 'Start Voice Control'}
         </button>
