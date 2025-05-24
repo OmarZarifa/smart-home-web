@@ -4,7 +4,7 @@ A modern web application for managing your smart home system. Built with React, 
 
 ## Features
 
-- 🏠 **Dashboard**: Overview of your smart home system with real-time weather and time information
+- 🏠 **Dashboard**: Overview of your smart home system
 - 🎤 **Voice Control**: Natural language interface for controlling your smart home devices
 - 📊 **System Logs**: Monitor and track all system activities and events
 - 👤 **User Profile**: Manage your account settings and preferences
@@ -12,17 +12,24 @@ A modern web application for managing your smart home system. Built with React, 
 - 🔐 **Authentication**: Secure login and registration system
 - 📱 **Responsive Design**: Works seamlessly on desktop and mobile devices
 - 🌓 **Modern UI**: Clean and intuitive interface with Tailwind CSS
+- 🔌 **Real-time Updates**: Socket.IO integration for live device status updates
+- 🌤️ **Weather Integration**: Real-time weather information using OpenWeatherMap API
 
 ## Tech Stack
 
-- **Frontend Framework:** React 18
-- **Build Tool:** Vite
-- **Styling:** Tailwind CSS
-- **Routing:** React Router v6
-- **Icons:** React Icons
+- **Frontend Framework:** React 19
+- **Build Tool:** Vite 6
+- **Styling:** 
+  - Tailwind CSS 3
+  - Custom CSS
+- **Routing:** React Router v7
+- **Icons:** React Icons 5
 - **State Management:** React Hooks
-- **API Integration:** Axios
-- **Weather Data:** OpenWeatherMap API
+- **API Integration:** 
+  - Axios
+  - OpenWeatherMap API
+- **Real-time Communication:** Socket.IO Client
+- **Code Quality:** ESLint 9
 
 ## Getting Started
 
@@ -62,7 +69,7 @@ npm run dev
 5. Open your browser and visit:
 
 ```
-http://localhost:5173
+http://localhost:3000
 ```
 
 ## Project Structure
@@ -70,9 +77,10 @@ http://localhost:5173
 ```
 smart-home-web/
 ├── src/
-│   ├── components/     # Reusable UI components
-│   │   ├── Header.jsx    # Top navigation with weather and time
-│   │   └── Sidebar.jsx   # Navigation sidebar
+│   ├── assets/        # Static assets and images
+│   ├── components/    # Reusable UI components
+│   │   └── Header.jsx # Header with weather and navigation
+│   ├── context/       # React context providers
 │   ├── pages/         # Page components
 │   │   ├── Dashboard.jsx
 │   │   ├── VoiceRecognition.jsx
@@ -81,18 +89,37 @@ smart-home-web/
 │   │   ├── Help.jsx
 │   │   ├── Login.jsx
 │   │   └── Register.jsx
+│   ├── services/      # API and service integrations
+│   ├── utils/         # Utility functions
+│   ├── socket.js      # Socket.IO configuration
 │   ├── App.jsx        # Main application component
+│   ├── index.css      # Global styles and Tailwind imports
 │   └── main.jsx       # Application entry point
 ├── public/            # Static assets
+├── swe-python-backend/ # Backend service
 ├── index.html         # HTML template
 ├── tailwind.config.js # Tailwind CSS configuration
+├── postcss.config.js  # PostCSS configuration
 ├── vite.config.js     # Vite configuration
+├── eslint.config.js   # ESLint configuration
 └── package.json       # Project dependencies
 ```
 
 ## Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+- `npm run dev` - Start development server (runs on port 3000)
+
+
+## Weather Integration
+
+The application uses the OpenWeatherMap API to display real-time weather information in the header. The weather data includes:
+- Current temperature
+- Weather condition
+- Location
+- Auto-refresh every 30 minutes
+
+To get your OpenWeatherMap API key:
+1. Sign up at [OpenWeatherMap](https://openweathermap.org/api)
+2. Go to your account dashboard
+3. Generate a new API key
+4. Add the key to your `.env` file as `VITE_OPENWEATHER_API_KEY`
