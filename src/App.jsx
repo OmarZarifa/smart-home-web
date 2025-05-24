@@ -14,6 +14,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Help from "./pages/Help";
 import Logs from "./pages/Logs";
+import GetStarted from "./pages/GetStarted";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ThemeProvider } from "./context/ThemeContext";
 
@@ -34,6 +35,7 @@ function App() {
       <Router>
         <Routes>
           {/* Auth Routes */}
+          <Route path="/start" element={<GetStarted />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 

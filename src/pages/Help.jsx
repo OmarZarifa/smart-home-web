@@ -12,19 +12,19 @@ const HelpCenterDashboard = () => {
     const faqs = [
         {
             question: "How do I add a device?",
-            answer: "To add a device, go to the dashboard page, click 'Add Device', and follow the instructions."
+            answer: "To add a device, go to the dashboard page, click 'Add Device', and click on the desired device that you want to add."
         },
         {
             question: "How do I delete a device?",
-            answer: "To delete a device, go to the dashboard page, click on the bin icon on the desired device, and follow the instructions."
+            answer: "To delete a device, go to the dashboard page, click on the bin icon on the desired device."
         },
         {
             question: "How do I reset my password?",
             answer: "To reset your password, go to the profile settings and update your password."
         },
         {
-            question: "How do I update my email address?",
-            answer: "To update your email address, go to your profile settings, enter your new email in the 'Email' field, and update."
+            question: "How do I update my email address or username?",
+            answer: "To update your email address or username, go to your profile settings, enter your new email in the 'Email' field and new username in the 'Username' field, and update."
         },
         {
             question: "What do I do if I encounter an error?",
@@ -33,6 +33,10 @@ const HelpCenterDashboard = () => {
         {
             question: "Where can I find security logs?",
             answer: "Security logs can be found in the Logs."
+        },
+        {
+            question: "How can I update a device?",
+            answer: "To update a device, go to your dashbord, click on the settings icon on the desired device and update, you can also update the devices using the 'Voice Control' view."
         }
     ];
 

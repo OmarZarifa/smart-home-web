@@ -1,10 +1,11 @@
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaUser, FaSearch } from 'react-icons/fa';
 import '../components/styles.css';
 import axiosInstance from '../utils/axiosInstance';
 
 function LogsList() {
     const [logs, setLogs] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const fetchLogs = async () => {
         try {
@@ -21,6 +22,11 @@ function LogsList() {
         fetchLogs();
     }, []);
 
+    const filteredLogs = logs.filter(log =>
+        Object.values(log).some(value =>
+            String(value).toLowerCase().includes(searchTerm.toLowerCase())
+        )
+    );
 
     return (
         <div className="min-h-screen bg-[#76766b] dark:bg-gray-900 p-8">
@@ -29,11 +35,13 @@ function LogsList() {
                     Security Logs
                 </h2>
                 <div className="relative">
-                    <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <FaSearch className="search-button" />
                     <input
                         type="text"
                         placeholder="Search logs..."
-                        className="pl-10 pr-4 py-2 rounded-lg bg-white/10 dark:bg-gray-800/30 border border-white/20 dark:border-gray-700/50 text-white dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="search-input"
                     />
                 </div>
             </div>
@@ -51,7 +59,7 @@ function LogsList() {
                     </tr>
                 </thead>
                 <tbody>
-                    {logs.map((log, index) => (
+                    {filteredLogs.map((log, index) => (
                         <tr
                             key={index}
                             className={`${index % 2 === 0 ? 'bg-[#2a2f2e] dark:bg-gray-800/50' : 'bg-[#1c2120] dark:bg-gray-800'
@@ -61,10 +69,9 @@ function LogsList() {
                             <td className="p-4">{log.role}</td>
                             <td className="p-4">{log.action}</td>
                             <td className="p-4">{log.device_id}</td>
-                            <td className="p-4">{new Date(log.created_at)
-                                        .toISOString()
-                                        .slice(0, 16)
-                                        .replace('T', ' ')}</td>
+                            <td className="p-4">
+                                {new Date(log.created_at).toISOString().slice(0, 16).replace('T', ' ')}
+                            </td>
                         </tr>
                     ))}
                 </tbody>

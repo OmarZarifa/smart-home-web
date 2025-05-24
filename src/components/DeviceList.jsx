@@ -138,7 +138,7 @@ function DeviceList() {
         console.log('Emitting device:update:', emitPayload);
         socket.emit('device:update', emitPayload);
 
-        refreshDevices(); 
+        refreshDevices();
       }
     } catch (err) {
       console.error('Failed to update device status:', err);
@@ -223,7 +223,9 @@ function DeviceList() {
       <div className="device-list-spacer"></div>
 
       {filteredDevices.length === 0 ? (
-        <p>No devices found.</p>
+        <div className="no-devices-message">
+        <p>No devices found. Please add your Devices.</p>
+      </div>
       ) : (
         <div className="device-grid">
           {filteredDevices.map((device) => (
